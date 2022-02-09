@@ -13,7 +13,11 @@ app = Flask(__name__)
 
 app.config['DEBUG'] = True
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://isvaszlsslkdxa:a31ed90a839f81ceb661ad9462e5693c67b2133f352bfb12bfcb05de75ed5460@ec2-50-19-32-96.compute-1.amazonaws.com:5432/d94v0uc9od6lhi'
+uri = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
+if uri and uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = uri
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'jose'
 api = Api(app)
